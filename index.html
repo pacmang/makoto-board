@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<title>Makoto × Raymond — Kanban</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, 'Helvetica Neue', sans-serif;
+    background: #0f0f14;
+    color: #e8e8f0;
+    min-height: 100vh;
+    padding: 24px;
+  }
+  header {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  header h1 {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+  header .sub {
+    font-size: 13px;
+    color: #666;
+  }
+  .board {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  .column {
+    background: #16161e;
+    border-radius: 12px;
+    padding: 16px;
+    border: 1px solid #222230;
+  }
+  .col-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .col-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+  .col-title {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #888;
+  }
+  .col-count {
+    margin-left: auto;
+    font-size: 11px;
+    color: #555;
+    background: #1e1e28;
+    padding: 2px 7px;
+    border-radius: 10px;
+  }
+  .card {
+    background: #1c1c26;
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    border: 1px solid #26263a;
+    cursor: default;
+    transition: border-color 0.15s;
+  }
+  .card:hover { border-color: #44446a; }
+  .card-title {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 5px;
+    line-height: 1.4;
+  }
+  .card-desc {
+    font-size: 11px;
+    color: #777;
+    line-height: 1.5;
+  }
+  .tag {
+    display: inline-block;
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 4px;
+    margin-top: 8px;
+    font-weight: 500;
+  }
+  .tag-trade  { background: #1a2a1a; color: #5ec45e; border: 1px solid #2a3d2a; }
+  .tag-dev    { background: #1a1a2e; color: #6b8cff; border: 1px solid #2a2a44; }
+  .tag-lang   { background: #2a1a1a; color: #ff8c6b; border: 1px solid #3d2a2a; }
+  .tag-infra  { background: #1a2228; color: #6bcfff; border: 1px solid #2a3444; }
+
+  /* Column accent colors */
+  .col-todo    .col-dot { background: #555; }
+  .col-waiting .col-dot { background: #f5a623; }
+  .col-doing   .col-dot { background: #4a90e2; }
+  .col-done    .col-dot { background: #5ec45e; }
+
+  .col-todo    { border-top: 2px solid #333; }
+  .col-waiting { border-top: 2px solid #f5a623; }
+  .col-doing   { border-top: 2px solid #4a90e2; }
+  .col-done    { border-top: 2px solid #5ec45e; }
+
+  footer {
+    margin-top: 24px;
+    font-size: 11px;
+    color: #444;
+    text-align: right;
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>🎴 Makoto × Raymond</h1>
+  <span class="sub">Project Board — 更新於 2026-03-02</span>
+</header>
+
+<div class="board">
+
+  <!-- TO DO -->
+  <div class="column col-todo">
+    <div class="col-header">
+      <div class="col-dot"></div>
+      <span class="col-title">待辦</span>
+      <span class="col-count">4</span>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Python 回測引擎</div>
+      <div class="card-desc">建立自定義 SPX 0DTE 回測框架，支援任意 EMA 組合、stop loss 模擬、P&L 輸出</div>
+      <span class="tag tag-dev">開發</span>
+    </div>
+
+    <div class="card">
+      <div class="card-title">EMA 參數優化掃描</div>
+      <div class="card-desc">一鍵測試所有 EMA 組合，找出最佳參數。需先完成回測引擎 + 購買數據</div>
+      <span class="tag tag-trade">交易</span>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Event Filter 機制</div>
+      <div class="card-desc">研究如何在 Fed 日、重大政治事件前自動降低部位或跳過進場，減少 slippage 傷害</div>
+      <span class="tag tag-trade">交易</span>
+    </div>
+
+    <div class="card">
+      <div class="card-title">日文 Telegram Bot 優化</div>
+      <div class="card-desc">Raymond 的 GitHub 上有現成 code，待登入後由 Makoto 審查並提出優化建議</div>
+      <span class="tag tag-lang">日文</span>
+    </div>
+
+  </div>
+
+  <!-- WAITING -->
+  <div class="column col-waiting">
+    <div class="col-header">
+      <div class="col-dot"></div>
+      <span class="col-title">等待中</span>
+      <span class="col-count">1</span>
+    </div>
+
+    <div class="card">
+      <div class="card-title">購買 OptionsDX 數據</div>
+      <div class="card-desc">需購買 SPX Minutely Option Chains（2022 + 2023）約 $50–100。等待 Raymond 操作</div>
+      <span class="tag tag-infra">數據</span>
+    </div>
+
+  </div>
+
+  <!-- IN PROGRESS -->
+  <div class="column col-doing">
+    <div class="col-header">
+      <div class="col-dot"></div>
+      <span class="col-title">進行中</span>
+      <span class="col-count">1</span>
+    </div>
+
+    <div class="card">
+      <div class="card-title">策略理解 & 架構文件化</div>
+      <div class="card-desc">梳理現有 EMA 策略的完整邏輯、風險結構、績效歷史，作為後續優化的基準</div>
+      <span class="tag tag-trade">交易</span>
+    </div>
+
+  </div>
+
+  <!-- DONE -->
+  <div class="column col-done">
+    <div class="col-header">
+      <div class="col-dot"></div>
+      <span class="col-title">完成</span>
+      <span class="col-count">2</span>
+    </div>
+
+    <div class="card">
+      <div class="card-title">初始設定 & 身份確認</div>
+      <div class="card-desc">Makoto 正式上線，記錄 Raymond 背景、工作方向確認</div>
+      <span class="tag tag-infra">設定</span>
+    </div>
+
+    <div class="card">
+      <div class="card-title">數據來源研究</div>
+      <div class="card-desc">評估 OptionsDX、CBOE、Polygon 等選項，確定 OptionsDX Minutely 為最佳方案</div>
+      <span class="tag tag-infra">數據</span>
+    </div>
+
+  </div>
+
+</div>
+
+<footer>🎴 Makoto — 每次有進展都會更新這個 board</footer>
+</body>
+</html>
