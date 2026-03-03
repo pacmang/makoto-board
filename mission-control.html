@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mission Control — Makoto × Raymond</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, 'Helvetica Neue', 'Segoe UI', sans-serif;
+    background: #0a0a0f;
+    color: #e8e8f0;
+    line-height: 1.6;
+  }
+  
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, #1a1a28 0%, #0f0f14 100%);
+    border-bottom: 1px solid #222230;
+    padding: 24px 32px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+  }
+  .header-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .logo-icon {
+    font-size: 28px;
+  }
+  .logo-text h1 {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+  .logo-text .subtitle {
+    font-size: 12px;
+    color: #666;
+    margin-top: 2px;
+  }
+  .header-meta {
+    display: flex;
+    gap: 20px;
+    font-size: 13px;
+    color: #888;
+  }
+  .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #5ec45e;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  /* Container */
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 32px;
+  }
+
+  /* Mission Statement */
+  .mission-card {
+    background: linear-gradient(135deg, #1a1a28 0%, #16161e 100%);
+    border-radius: 16px;
+    padding: 28px 32px;
+    margin-bottom: 32px;
+    border: 1px solid #2a2a3a;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  }
+  .mission-card h2 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: #aaa;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .mission-text {
+    font-size: 15px;
+    line-height: 1.8;
+    color: #d0d0e0;
+    margin-bottom: 12px;
+  }
+  .mission-text strong {
+    color: #fff;
+  }
+
+  /* Dashboard Grid */
+  .dashboard {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+
+  /* Card Base */
+  .card {
+    background: #16161e;
+    border-radius: 12px;
+    padding: 24px;
+    border: 1px solid #222230;
+  }
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #222230;
+  }
+  .card-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #aaa;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .card-action {
+    font-size: 12px;
+    color: #6b8cff;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .card-action:hover {
+    text-decoration: underline;
+  }
+
+  /* Daily Brief */
+  .brief-item {
+    background: #1c1c26;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 12px;
+    border-left: 3px solid #4a90e2;
+  }
+  .brief-date {
+    font-size: 11px;
+    color: #666;
+    margin-bottom: 8px;
+  }
+  .brief-content {
+    font-size: 13px;
+    line-height: 1.6;
+    color: #ccc;
+  }
+  .brief-content ul {
+    margin: 8px 0;
+    padding-left: 20px;
+  }
+  .brief-content li {
+    margin: 4px 0;
+  }
+
+  /* Quick Actions */
+  .action-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .action-btn {
+    background: #1c1c26;
+    border: 1px solid #2a2a3a;
+    border-radius: 8px;
+    padding: 14px 16px;
+    font-size: 13px;
+    color: #e8e8f0;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+  }
+  .action-btn:hover {
+    background: #222230;
+    border-color: #4a90e2;
+  }
+  .action-btn .icon {
+    font-size: 18px;
+    margin-bottom: 4px;
+  }
+
+  /* Kanban Preview */
+  .kanban-mini {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+  .kanban-col {
+    background: #1c1c26;
+    border-radius: 8px;
+    padding: 12px;
+  }
+  .kanban-col-header {
+    font-size: 11px;
+    font-weight: 600;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .kanban-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+  .kanban-col:nth-child(1) .kanban-dot { background: #555; }
+  .kanban-col:nth-child(2) .kanban-dot { background: #f5a623; }
+  .kanban-col:nth-child(3) .kanban-dot { background: #4a90e2; }
+  .kanban-col:nth-child(4) .kanban-dot { background: #5ec45e; }
+  .kanban-count {
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  /* Projects */
+  .project-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .project-item {
+    background: #1c1c26;
+    border-radius: 8px;
+    padding: 14px 16px;
+    border-left: 3px solid #4a90e2;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .project-item:hover {
+    background: #222230;
+  }
+  .project-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #e8e8f0;
+    margin-bottom: 4px;
+  }
+  .project-desc {
+    font-size: 11px;
+    color: #777;
+  }
+
+  /* Full Width Section */
+  .full-width {
+    grid-column: 1 / -1;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 24px;
+    font-size: 11px;
+    color: #444;
+  }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <div class="header-content">
+    <div class="logo">
+      <div class="logo-icon">🎴</div>
+      <div class="logo-text">
+        <h1>Mission Control</h1>
+        <div class="subtitle">Makoto × Raymond</div>
+      </div>
+    </div>
+    <div class="header-meta">
+      <div class="meta-item">
+        <div class="status-dot"></div>
+        <span>系統運作中</span>
+      </div>
+      <div class="meta-item">
+        📅 <span id="current-date"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Container -->
+<div class="container">
+
+  <!-- Mission Statement -->
+  <div class="mission-card">
+    <h2>Mission Statement</h2>
+    <div class="mission-text">
+      <strong>Raymond</strong> 負責方向：決定做什麼、設定優先順序、拍板需要判斷的決定。所有涉及交易決策或金錢的事，最終由 Raymond 確認後 Makoto 才執行。
+    </div>
+    <div class="mission-text">
+      <strong>Makoto</strong> 負責推進：理解目標後主動工作，不等指令。在 Raymond 睡覺或忙碌的時候，持續往前。每天早上彙報進度，提出需要 Raymond 決定的事。
+    </div>
+    <div class="mission-text">
+      目標不是固定的，會隨時加入新的想法。Makoto 的工作是確保每一個目標都有人在推，沒有事情因為「沒時間處理」而卡住。
+    </div>
+  </div>
+
+  <!-- Dashboard Grid -->
+  <div class="dashboard">
+
+    <!-- Daily Brief -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">📋 每日晨報</div>
+        <a href="#" class="card-action">查看完整記錄</a>
+      </div>
+      
+      <div class="brief-item">
+        <div class="brief-date">2026-03-03 — 今日</div>
+        <div class="brief-content">
+          <strong>昨晚完成：</strong>
+          <ul>
+            <li>建立 Mission Statement，明確雙方角色與工作邊界</li>
+            <li>設定 GitHub SSH key，解決推送問題</li>
+            <li>新增 KOSPI 200 研究任務至 Kanban</li>
+          </ul>
+          <strong>今日計劃：</strong>
+          <ul>
+            <li>完成 Mission Control 首版</li>
+            <li>開始策略文件化工作</li>
+          </ul>
+          <strong>需要確認：</strong>
+          <ul>
+            <li>是否購買 OptionsDX 數據（SPX 2022-2023，約 $100）</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="brief-item">
+        <div class="brief-date">2026-03-02 — 首次設定</div>
+        <div class="brief-content">
+          <strong>完成：</strong>
+          <ul>
+            <li>Makoto 正式上線，確認身份與工作方向</li>
+            <li>評估全球 0DTE 市場，確定 OptionsDX 為數據來源</li>
+            <li>建立 Kanban Board 並部署至 GitHub Pages</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">⚡ 快速操作</div>
+      </div>
+      <div class="action-grid">
+        <a href="https://pacmang.github.io/makoto-board/" target="_blank" class="action-btn">
+          <div class="icon">📊</div>
+          <div>Kanban Board</div>
+        </a>
+        <a href="#" class="action-btn">
+          <div class="icon">📈</div>
+          <div>交易策略</div>
+        </a>
+        <a href="#" class="action-btn">
+          <div class="icon">📝</div>
+          <div>研究筆記</div>
+        </a>
+        <a href="#" class="action-btn">
+          <div class="icon">⚙️</div>
+          <div>系統設定</div>
+        </a>
+      </div>
+    </div>
+
+    <!-- Kanban Overview -->
+    <div class="card full-width">
+      <div class="card-header">
+        <div class="card-title">📌 任務概覽</div>
+        <a href="https://pacmang.github.io/makoto-board/" target="_blank" class="card-action">開啟完整看板</a>
+      </div>
+      <div class="kanban-mini">
+        <div class="kanban-col">
+          <div class="kanban-col-header">
+            <div class="kanban-dot"></div>
+            待辦
+          </div>
+          <div class="kanban-count">5</div>
+        </div>
+        <div class="kanban-col">
+          <div class="kanban-col-header">
+            <div class="kanban-dot"></div>
+            等待中
+          </div>
+          <div class="kanban-count">1</div>
+        </div>
+        <div class="kanban-col">
+          <div class="kanban-col-header">
+            <div class="kanban-dot"></div>
+            進行中
+          </div>
+          <div class="kanban-count">1</div>
+        </div>
+        <div class="kanban-col">
+          <div class="kanban-col-header">
+            <div class="kanban-dot"></div>
+            完成
+          </div>
+          <div class="kanban-count">2</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Projects -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">🎯 進行中專案</div>
+      </div>
+      <div class="project-list">
+        <div class="project-item">
+          <div class="project-name">SPX 0DTE 策略優化</div>
+          <div class="project-desc">回測引擎開發、EMA 參數優化</div>
+        </div>
+        <div class="project-item">
+          <div class="project-name">KOSPI 200 可行性研究</div>
+          <div class="project-desc">評估透過 IB API 打韓國市場</div>
+        </div>
+        <div class="project-item">
+          <div class="project-name">量化交易研究</div>
+          <div class="project-desc">待展開</div>
+        </div>
+        <div class="project-item">
+          <div class="project-name">個人品牌網站</div>
+          <div class="project-desc">Peak Performance / 心理學專家定位</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resources -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">🔗 常用資源</div>
+      </div>
+      <div class="project-list">
+        <a href="https://tradeautomationtoolbox.com" target="_blank" class="project-item">
+          <div class="project-name">Trade Automation Toolbox</div>
+          <div class="project-desc">當前交易執行平台</div>
+        </a>
+        <a href="https://www.optionsdx.com" target="_blank" class="project-item">
+          <div class="project-name">OptionsDX</div>
+          <div class="project-desc">SPX 歷史數據來源</div>
+        </a>
+        <a href="https://github.com/pacmang" target="_blank" class="project-item">
+          <div class="project-name">GitHub — pacmang</div>
+          <div class="project-desc">程式碼與專案管理</div>
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Footer -->
+<div class="footer">
+  🎴 Makoto — Mission Control v1.0 — 更新於 2026-03-03
+</div>
+
+<script>
+  // Update current date
+  const dateEl = document.getElementById('current-date');
+  const now = new Date();
+  const options = { year: 'numeric', month: '2-digit', day: '2-digit', weekday: 'short' };
+  dateEl.textContent = now.toLocaleDateString('zh-TW', options);
+</script>
+
+</body>
+</html>
